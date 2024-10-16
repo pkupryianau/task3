@@ -1,4 +1,4 @@
-# Task:3 Create kOPS
+# Task3: K8s Cluster Configuration and Creation
 
 ## Objective
 
