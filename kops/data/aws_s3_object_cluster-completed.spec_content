@@ -1,0 +1,258 @@
+apiVersion: kops.k8s.io/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: "2024-10-19T07:22:20Z"
+  name: k8s-cluster.prkpo.com
+spec:
+  api:
+    loadBalancer:
+      class: Network
+      type: Public
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudConfig:
+    awsEBSCSIDriver:
+      version: v1.33.0
+    manageStorageClasses: true
+  cloudControllerManager:
+    allocateNodeCIDRs: true
+    clusterCIDR: 100.96.0.0/11
+    clusterName: k8s-cluster.prkpo.com
+    configureCloudRoutes: false
+    image: registry.k8s.io/provider-aws/cloud-controller-manager:v1.30.0
+    leaderElection:
+      leaderElect: true
+  cloudProvider: aws
+  clusterDNSDomain: cluster.local
+  configBase: s3://task3kops/k8s-cluster.prkpo.com
+  containerd:
+    logLevel: info
+    runc:
+      version: 1.1.12
+    version: 1.7.16
+  etcdClusters:
+  - backups:
+      backupStore: s3://task3kops/k8s-cluster.prkpo.com/backups/etcd/main
+    cpuRequest: 200m
+    etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: control-plane-eu-central-1a
+      name: a
+    manager:
+      backupRetentionDays: 90
+    memoryRequest: 100Mi
+    name: main
+    version: 3.5.13
+  - backups:
+      backupStore: s3://task3kops/k8s-cluster.prkpo.com/backups/etcd/events
+    cpuRequest: 100m
+    etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: control-plane-eu-central-1a
+      name: a
+    manager:
+      backupRetentionDays: 90
+    memoryRequest: 100Mi
+    name: events
+    version: 3.5.13
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  keyStore: s3://task3kops/k8s-cluster.prkpo.com/pki
+  kubeAPIServer:
+    allowPrivileged: true
+    anonymousAuth: false
+    apiAudiences:
+    - kubernetes.svc.default
+    apiServerCount: 1
+    authorizationMode: Node,RBAC
+    bindAddress: 0.0.0.0
+    cloudProvider: external
+    enableAdmissionPlugins:
+    - NamespaceLifecycle
+    - LimitRanger
+    - ServiceAccount
+    - DefaultStorageClass
+    - DefaultTolerationSeconds
+    - MutatingAdmissionWebhook
+    - ValidatingAdmissionWebhook
+    - NodeRestriction
+    - ResourceQuota
+    etcdServers:
+    - https://127.0.0.1:4001
+    etcdServersOverrides:
+    - /events#https://127.0.0.1:4002
+    featureGates:
+      InTreePluginAWSUnregister: "true"
+    image: registry.k8s.io/kube-apiserver:v1.30.2@sha256:340ab4a1d66a60630a7a298aa0b2576fcd82e51ecdddb751cf61e5d3846fde2d
+    kubeletPreferredAddressTypes:
+    - InternalIP
+    - Hostname
+    - ExternalIP
+    logLevel: 2
+    requestheaderAllowedNames:
+    - aggregator
+    requestheaderExtraHeaderPrefixes:
+    - X-Remote-Extra-
+    requestheaderGroupHeaders:
+    - X-Remote-Group
+    requestheaderUsernameHeaders:
+    - X-Remote-User
+    securePort: 443
+    serviceAccountIssuer: https://api.internal.k8s-cluster.prkpo.com
+    serviceAccountJWKSURI: https://api.internal.k8s-cluster.prkpo.com/openid/v1/jwks
+    serviceClusterIPRange: 100.64.0.0/13
+    storageBackend: etcd3
+  kubeControllerManager:
+    allocateNodeCIDRs: true
+    attachDetachReconcileSyncPeriod: 1m0s
+    cloudProvider: external
+    clusterCIDR: 100.96.0.0/11
+    clusterName: k8s-cluster.prkpo.com
+    configureCloudRoutes: false
+    featureGates:
+      InTreePluginAWSUnregister: "true"
+    image: registry.k8s.io/kube-controller-manager:v1.30.2@sha256:4c412bc1fc585ddeba10d34a02e7507ea787ec2c57256d4c18fd230377ab048e
+    leaderElection:
+      leaderElect: true
+    logLevel: 2
+    useServiceAccountCredentials: true
+  kubeDNS:
+    cacheMaxConcurrent: 150
+    cacheMaxSize: 1000
+    cpuRequest: 100m
+    domain: cluster.local
+    memoryLimit: 170Mi
+    memoryRequest: 70Mi
+    nodeLocalDNS:
+      cpuRequest: 25m
+      enabled: false
+      image: registry.k8s.io/dns/k8s-dns-node-cache:1.23.0
+      memoryRequest: 5Mi
+    provider: CoreDNS
+    serverIP: 100.64.0.10
+  kubeProxy:
+    clusterCIDR: 100.96.0.0/11
+    cpuRequest: 100m
+    enabled: false
+    image: registry.k8s.io/kube-proxy:v1.30.2@sha256:8a44c6e094af3dea3de57fa967e201608a358a3bd8b4e3f31ab905bbe4108aec
+    logLevel: 2
+  kubeScheduler:
+    featureGates:
+      InTreePluginAWSUnregister: "true"
+    image: registry.k8s.io/kube-scheduler:v1.30.2@sha256:0ed75a333704f5d315395c6ec04d7af7405715537069b65d40b43ec1c8e030bc
+    leaderElection:
+      leaderElect: true
+    logLevel: 2
+  kubelet:
+    anonymousAuth: false
+    cgroupDriver: systemd
+    cgroupRoot: /
+    cloudProvider: external
+    clusterDNS: 100.64.0.10
+    clusterDomain: cluster.local
+    enableDebuggingHandlers: true
+    evictionHard: memory.available<100Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%
+    featureGates:
+      InTreePluginAWSUnregister: "true"
+    kubeconfigPath: /var/lib/kubelet/kubeconfig
+    logLevel: 2
+    podInfraContainerImage: registry.k8s.io/pause:3.9@sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097
+    podManifestPath: /etc/kubernetes/manifests
+    protectKernelDefaults: true
+    registerSchedulable: true
+    shutdownGracePeriod: 30s
+    shutdownGracePeriodCriticalPods: 10s
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  - ::/0
+  kubernetesVersion: 1.30.2
+  masterKubelet:
+    anonymousAuth: false
+    cgroupDriver: systemd
+    cgroupRoot: /
+    cloudProvider: external
+    clusterDNS: 100.64.0.10
+    clusterDomain: cluster.local
+    enableDebuggingHandlers: true
+    evictionHard: memory.available<100Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%
+    featureGates:
+      InTreePluginAWSUnregister: "true"
+    kubeconfigPath: /var/lib/kubelet/kubeconfig
+    logLevel: 2
+    podInfraContainerImage: registry.k8s.io/pause:3.9@sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097
+    podManifestPath: /etc/kubernetes/manifests
+    protectKernelDefaults: true
+    registerSchedulable: true
+    shutdownGracePeriod: 30s
+    shutdownGracePeriodCriticalPods: 10s
+  networkCIDR: 172.20.0.0/16
+  networking:
+    cilium:
+      agentPrometheusPort: 9090
+      bpfCTGlobalAnyMax: 262144
+      bpfCTGlobalTCPMax: 524288
+      bpfLBAlgorithm: random
+      bpfLBMaglevTableSize: "16381"
+      bpfLBMapMax: 65536
+      bpfNATGlobalMax: 524288
+      bpfNeighGlobalMax: 524288
+      bpfPolicyMapMax: 16384
+      clusterName: default
+      cpuRequest: 25m
+      disableCNPStatusUpdates: true
+      disableMasquerade: false
+      enableBPFMasquerade: false
+      enableEndpointHealthChecking: true
+      enableL7Proxy: true
+      enableNodePort: true
+      enableRemoteNodeIdentity: true
+      enableUnreachableRoutes: false
+      hubble:
+        enabled: false
+      identityAllocationMode: crd
+      identityChangeGracePeriod: 5s
+      ingress:
+        enabled: false
+      ipam: kubernetes
+      memoryRequest: 128Mi
+      monitorAggregation: medium
+      sidecarIstioProxyImage: cilium/istio_proxy
+      toFqdnsDnsRejectResponseCode: refused
+      tunnel: vxlan
+      version: v1.15.6
+  nodeTerminationHandler:
+    cpuRequest: 50m
+    deleteSQSMsgIfNodeNotFound: false
+    enableRebalanceDraining: false
+    enableRebalanceMonitoring: false
+    enableScheduledEventDraining: true
+    enableSpotInterruptionDraining: true
+    enabled: true
+    excludeFromLoadBalancers: true
+    managedASGTag: aws-node-termination-handler/managed
+    memoryRequest: 64Mi
+    podTerminationGracePeriod: -1
+    prometheusEnable: false
+    taintNode: false
+    version: v1.22.0
+  nonMasqueradeCIDR: 100.64.0.0/10
+  podCIDR: 100.96.0.0/11
+  secretStore: s3://task3kops/k8s-cluster.prkpo.com/secrets
+  serviceClusterIPRange: 100.64.0.0/13
+  sshAccess:
+  - 0.0.0.0/0
+  - ::/0
+  subnets:
+  - cidr: 172.20.128.0/17
+    name: eu-central-1a
+    type: Private
+    zone: eu-central-1a
+  - cidr: 172.20.0.0/20
+    name: utility-eu-central-1a
+    type: Utility
+    zone: eu-central-1a
+  topology:
+    dns:
+      type: None

@@ -1,0 +1,61 @@
+Assets:
+  amd64:
+  - 6923abe67ef069afca61c71c585023840426e802b198298055af3a82e11a4e52@https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubelet,https://cdn.dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubelet
+  - c6e9c45ce3f82c90663e3c30db3b27c167e8b19d83ed4048b61c1013f6a7c66e@https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl,https://cdn.dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl
+  - 5035d7814c95cd3cedbc5efb447ef25a4942ef05caab2159746d55ce1698c74a@https://artifacts.k8s.io/binaries/cloud-provider-aws/v1.27.1/linux/amd64/ecr-credential-provider-linux-amd64
+  - f3a841324845ca6bf0d4091b4fc7f97e18a623172158b72fc3fdcdb9d42d2d37@https://storage.googleapis.com/k8s-artifacts-cni/release/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
+  - 4f4f2c3c7d14fd59a404961a3a3341303c2fdeeba0e78808c209f606e828f99c@https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-amd64.tar.gz
+  - aadeef400b8f05645768c1476d1023f7875b78f52c7ff1967a6dbce236b8cbd8@https://github.com/opencontainers/runc/releases/download/v1.1.12/runc.amd64
+  - 71aee9d987b7fad0ff2ade50b038ad7e2356324edc02c54045960a3521b3e6a7@https://github.com/containerd/nerdctl/releases/download/v1.7.4/nerdctl-1.7.4-linux-amd64.tar.gz
+  - d16a1ffb3938f5a19d5c8f45d363bd091ef89c0bc4d44ad16b933eede32fdcbb@https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-amd64.tar.gz
+  arm64:
+  - 72ceb082311b42032827a936f80cd2437b8eee03053d05dbe36ba48585febfb8@https://dl.k8s.io/release/v1.30.2/bin/linux/arm64/kubelet,https://cdn.dl.k8s.io/release/v1.30.2/bin/linux/arm64/kubelet
+  - 56becf07105fbacd2b70f87f3f696cfbed226cb48d6d89ed7f65ba4acae3f2f8@https://dl.k8s.io/release/v1.30.2/bin/linux/arm64/kubectl,https://cdn.dl.k8s.io/release/v1.30.2/bin/linux/arm64/kubectl
+  - b3d567bda9e2996fc1fbd9d13506bd16763d3865b5c7b0b3c4b48c6088c04481@https://artifacts.k8s.io/binaries/cloud-provider-aws/v1.27.1/linux/arm64/ecr-credential-provider-linux-arm64
+  - 525e2b62ba92a1b6f3dc9612449a84aa61652e680f7ebf4eff579795fe464b57@https://storage.googleapis.com/k8s-artifacts-cni/release/v1.2.0/cni-plugins-linux-arm64-v1.2.0.tgz
+  - 2d4373de40a6f58cd0f29377c0257b35697a987248e6268520586996771d7a75@https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-arm64.tar.gz
+  - 879f910a05c95c10c64ad8eb7d5e3aa8e4b30e65587b3d68e009a3565aed5bb8@https://github.com/opencontainers/runc/releases/download/v1.1.12/runc.arm64
+  - d8df47708ca57b9cd7f498055126ba7dcfc811d9ba43aae1830c93a09e70e22d@https://github.com/containerd/nerdctl/releases/download/v1.7.4/nerdctl-1.7.4-linux-arm64.tar.gz
+  - 0b615cfa00c331fb9c4524f3d4058a61cc487b33a3436d1269e7832cf283f925@https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-arm64.tar.gz
+CAs: {}
+ClusterName: k8s-cluster.prkpo.com
+Hooks:
+- null
+- null
+KeypairIDs:
+  kubernetes-ca: "7427383879401664904970915474"
+KubeProxy: null
+KubeletConfig:
+  anonymousAuth: false
+  cgroupDriver: systemd
+  cgroupRoot: /
+  cloudProvider: external
+  clusterDNS: 100.64.0.10
+  clusterDomain: cluster.local
+  enableDebuggingHandlers: true
+  evictionHard: memory.available<100Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%
+  featureGates:
+    InTreePluginAWSUnregister: "true"
+  kubeconfigPath: /var/lib/kubelet/kubeconfig
+  logLevel: 2
+  nodeLabels:
+    node-role.kubernetes.io/node: ""
+  podInfraContainerImage: registry.k8s.io/pause:3.9@sha256:7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097
+  podManifestPath: /etc/kubernetes/manifests
+  protectKernelDefaults: true
+  registerSchedulable: true
+  shutdownGracePeriod: 30s
+  shutdownGracePeriodCriticalPods: 10s
+KubernetesVersion: 1.30.2
+Networking:
+  cilium: {}
+  nonMasqueradeCIDR: 100.64.0.0/10
+  serviceClusterIPRange: 100.64.0.0/13
+UpdatePolicy: automatic
+containerdConfig:
+  logLevel: info
+  runc:
+    version: 1.1.12
+  version: 1.7.16
+usesLegacyGossip: false
+usesNoneDNS: true

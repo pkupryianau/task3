@@ -1,0 +1,16 @@
+{
+  "Statement": [
+    {
+      "Action": "sqs:SendMessage",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "events.amazonaws.com",
+          "sqs.amazonaws.com"
+        ]
+      },
+      "Resource": "arn:aws:sqs:eu-central-1:478714564863:k8s-cluster-prkpo-com-nth"
+    }
+  ],
+  "Version": "2012-10-17"
+}
